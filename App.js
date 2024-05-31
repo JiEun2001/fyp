@@ -24,7 +24,7 @@ export default function App() {
       <NavigationContainer  ref={navigationRef}>
         
         <Stack.Navigator
-          initialRouteName="StartScreen"
+          initialRouteName="CampusMap"
           screenOptions={{
             headerShown: false,
           }}

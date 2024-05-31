@@ -33,7 +33,7 @@ export default function Dashboard({ navigation }) {
       >
         Logout
       </Button>
-      <TabNavigation/>
+      {/* <TabNavigation/> */}
     </Background>
   )
 }

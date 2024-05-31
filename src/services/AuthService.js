@@ -44,7 +44,10 @@ class AuthService {
                 const user = userCredential.user;
                 uid= user.uid;
                 await UserService.getUserData(uid);
-                RootNavigation.navigate('Dashboard', {});
+                console.log("getuser data")
+                // RootNavigation.navigate('Dashboard', {});
+                RootNavigation.navigate('CampusMap', {});
+                console.log("route success")
             })
             .catch((error) => {
                 console.log("signIn failed")
@@ -61,7 +64,7 @@ class AuthService {
                     Alert.alert('Error', errorMessage);
                 }
                 console.log("alert pass")
-                RootNavigation.navigate('LoginScreen', {});
+                RootNavigation.navigate('StartScreen', {});
 
             });
     }
