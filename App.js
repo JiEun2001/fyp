@@ -12,6 +12,7 @@ import {
   ResetPasswordScreen,
   Dashboard,
   CampusMap,
+  ChooseLocation,
 } from './src/screen'
 import { 
   Register
@@ -35,6 +36,7 @@ export default function App() {
           <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
           <Stack.Screen name="Dashboard" component={Dashboard} />
           <Stack.Screen name="CampusMap" component={CampusMap} />
+          <Stack.Screen name="ChooseLocation" component={ChooseLocation} />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
