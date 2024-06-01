@@ -93,19 +93,22 @@ export default function CampusMap({ navigation }) {
             onReady={result => {
               mapref.current.fitToCoordinates(result.coordinates, {
                 edgePadding: {
-                  edgePadding: 10,
+                  right: 30,
+                  bottom: 100,
+                  left: 30,
+                  top:100
                 }
               })
             }}
         />
       </MapView>
-
+{/* 
       <Button
         mode="outlined"
         onPress={onLogOutPressed}
       >
         Log Out
-      </Button>
+      </Button> */}
       
       
       

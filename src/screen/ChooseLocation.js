@@ -18,6 +18,8 @@ import { useNavigation } from '@react-navigation/native'
 export default function ChooseLocation(props) {
 
   const navigation = useNavigation();
+
+
   const [state,setState] = useState ({
     pickupCords: {},
     droplocationCords: {}
