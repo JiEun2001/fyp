@@ -26,19 +26,6 @@ export default function LoginScreen({ navigation }) {
     }
 
     await AuthServices.signIn(email.value, password.value);
-    // if (AuthServices.signIn(email.value, password.value)) {
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: 'Dashboard' }],
-    //   })
-
-    // } else {
-    //   navigation.reset({
-    //     index: 0,
-    //     routes: [{ name: 'StartScreen' }],
-    //   })
-    // }
-
 
   }
 

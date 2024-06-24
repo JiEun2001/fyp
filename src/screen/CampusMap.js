@@ -12,6 +12,7 @@ import { View ,StyleSheet } from 'react-native'
 import TextInput from '../components/TextInput'
 import { GOOGLE_MAPS_APIKEY } from '../../googleMapKey'
 import MapViewDirections from 'react-native-maps-directions'
+import CstmBtn from '../components/CstmBtn'
 
 export default function CampusMap({ navigation }) {
 
@@ -112,7 +113,7 @@ export default function CampusMap({ navigation }) {
       
       
       
-      {/* <Header>Welcome {UserService.data.Name}</Header> */}
+      <Header>Welcome {UserService.data.Name}</Header>
       
       <Button
         mode="outlined"
@@ -123,6 +124,22 @@ export default function CampusMap({ navigation }) {
       >
         Choose Location
       </Button>
+      <CstmBtn
+        mode="outlined"
+        onPress={()=>{
+          {navigation.navigate('Translator',)}
+        }}
+        >
+          Chatbot
+        </CstmBtn>
+        <CstmBtn
+        mode="outlined"
+        onPress={()=>{
+          {navigation.navigate('ToDoList',)}
+        }}
+        >
+          To-do List
+        </CstmBtn>
     </Background>
   )
 }

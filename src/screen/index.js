@@ -5,3 +5,6 @@ export { default as ResetPasswordScreen } from './ResetPasswordScreen'
 export { default as Dashboard } from './Dashboard'
 export { default as CampusMap } from './CampusMap'
 export { default as ChooseLocation } from './ChooseLocation'
+export { default as Translator } from './Translator'
+export { default as ToDoList } from './ToDoList'
+
