@@ -9,6 +9,7 @@ import AuthServices from '../services/AuthService'
 import UserService from '../services/UserService'
 import Tab from '../components/TabNavigation'
 import TabNavigation from '../components/TabNavigation'
+import CstmBtn from '../components/CstmBtn'
 
 export default function Dashboard({ navigation }) {
 
@@ -27,6 +28,30 @@ export default function Dashboard({ navigation }) {
       <Paragraph>
         This is Dashboard
       </Paragraph>
+      <CstmBtn
+        mode="outlined"
+        onPress={()=>{
+          {navigation.navigate('CampusMap',)}
+        }}
+        >
+          Campus Map
+        </CstmBtn>
+      <CstmBtn
+        mode="outlined"
+        onPress={()=>{
+          {navigation.navigate('Translator',)}
+        }}
+        >
+          Chatbot
+        </CstmBtn>
+        <CstmBtn
+        mode="outlined"
+        onPress={()=>{
+          {navigation.navigate('ToDoList',)}
+        }}
+        >
+          To-do List
+        </CstmBtn>
       <Button
         mode="outlined"
         onPress={onLogOutPressed}

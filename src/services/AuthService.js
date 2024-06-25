@@ -36,37 +36,46 @@ class AuthService {
     //firebase login
     async signIn(email, password) {
         console.log(email + "================== " + password);
-        // const auth = getAuth();
+        if(email=="admin@gmail.com" && password == "adminpass1"){
+            RootNavigation.navigate('Admin', {});
+            // admin login 
+        }else{
+            //user Login
+              // const auth = getAuth();
         await signInWithEmailAndPassword(FIREBASE_AUTH, email, password)
-            .then(async (userCredential) => {
-                // Signed in 
-                console.log("signIn suceess")
-                const user = userCredential.user;
-                uid= user.uid;
-                await UserService.getUserData(uid);
-                console.log("getuser data")
-                // RootNavigation.navigate('Dashboard', {});
-                RootNavigation.navigate('CampusMap', {});
-                console.log("route success")
-            })
-            .catch((error) => {
-                console.log("signIn failed")
-                console.log(error.code)
-                const errorCode = error.code;
-                const errorMessage = error.message;
-                if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/user-not-found') {
-                    console.log("testing errorCode")
-                    Alert.alert("Invalid Credential", "Check email and password", [{ text: "OK" }], {
-                        cancelable: true,
-                    });
-                } else {
-                    // Handle other errors
-                    Alert.alert('Error', errorMessage);
-                }
-                console.log("alert pass")
-                RootNavigation.navigate('StartScreen', {});
+        .then(async (userCredential) => {
+            // Signed in 
+            console.log("signIn suceess")
+            const user = userCredential.user;
+            uid= user.uid;
+            await UserService.getUserData(uid);
+            console.log("getuser data")
+            // RootNavigation.navigate('Dashboard', {});
+            RootNavigation.navigate('Dashboard', {});
+            console.log("route success")
+        })
+        .catch((error) => {
+            console.log("signIn failed")
+            console.log(error.code)
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            if (errorCode === 'auth/invalid-credential' || errorCode === 'auth/user-not-found') {
+                console.log("testing errorCode")
+                Alert.alert("Invalid Credential", "Check email and password", [{ text: "OK" }], {
+                    cancelable: true,
+                });
+            } else {
+                // Handle other errors
+                Alert.alert('Error', errorMessage);
+            }
+            console.log("alert pass")
+            RootNavigation.navigate('StartScreen', {});
 
-            });
+        });
+        }
+
+
+      
     }
 
     passswordReset(email) {

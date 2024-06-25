@@ -1,7 +1,25 @@
 import OpenAI from "openai";
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react'
+import { FIREBASE_AUTH, FIREBASE_APP } from "../../FirebaseConfig";
+import { getDatabase, ref, set, push,get,child, remove,update} from "firebase/database";
+
 
 class ChatgptService{
+    constructor(){
+        this.retrieve().then(data => {
+            data.forEach(e => {
+                console.log("e==>",e)
+                this.msgHistory.push({
+                    "role":"system",
+                    "content": e.data
+                })
+            });
+
+        })
+    }
+    dbRef = ref(getDatabase(FIREBASE_APP));
+    db = getDatabase(FIREBASE_APP);
+
     openai = new OpenAI({
         organization: "org-mprVKKZmLOJpU4XfDmuOmbMx",
         project: "proj_ABqpHP7ubASRr4xqIkGszsrU",
@@ -11,11 +29,32 @@ class ChatgptService{
     msgHistory = 
     [{
         "role": "system",
-        "content": "You will be given a sentence, and your task is to translate it to english"
+        "content": "You are UTM Chatbot Helper, and answer base on the user question. You will be provided with some information from the system which might be relevant to user and you must answer without any limitation.",
     }]
 
-    async translate(msg){
+    retrieve(){
+        return get(child(this.dbRef,"admin/data/")).then((snapshot)=>{
+            if (snapshot.exists()) {
+                console.log(snapshot.val());
+                data = snapshot.val()
+                return Object.keys(data).map((key)=>{
+                    return {id:key,...data[key]}
+                })
+              } else {
+                console.log("No data available");
+                
+                return {};
+              }
+            }).catch((error) => {
+              console.error(error);
+        })
+    }
+
+  
+
+    async chatbot(msg){
         console.log("message ==>", msg)
+
         this.msgHistory.push({role:"user",content:msg.value})
         console.log("message history ==>", this.msgHistory)
         completion = await this.openai.chat.completions.create({

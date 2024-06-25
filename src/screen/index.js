@@ -7,4 +7,5 @@ export { default as CampusMap } from './CampusMap'
 export { default as ChooseLocation } from './ChooseLocation'
 export { default as Translator } from './Translator'
 export { default as ToDoList } from './ToDoList'
+export { default as Admin } from './Admin'
 

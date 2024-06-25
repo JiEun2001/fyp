@@ -60,7 +60,6 @@ export default  function ToDoList({navigation}) {
     <Background>
       <Header>{UserService.data.Name} To-do List</Header>
       <BackButton goBack={navigation.goBack} />
-      <Header>To-do List</Header>
         {tasklist.length > 0 ? (
 						tasklist.map((todo, index) => (
 

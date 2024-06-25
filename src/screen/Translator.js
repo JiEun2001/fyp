@@ -11,17 +11,18 @@ import Tab from '../components/TabNavigation'
 import Chatgpt from '../services/ChatgptService'
 import TextInput from '../components/TextInput'
 import TextArea from '../components/Textarea'
+import { Chat } from 'openai/resources'
 
 export default function Translator({ navigation }) {
+
     msgTranslate = ''
   const onPressTranslate = async () => {
     console.log("translate pressed")
-    msgTranslate =await Chatgpt.translate(msg)
+    msgTranslate =await Chatgpt.chatbot(msg)
     console.log("msgTranslate ===>",msgTranslate)
-    formattedMsg = msgTranslate.map(m => `${m.role}: ${m.content}`).join('\n');
+    formattedMsg = msgTranslate.filter(f => f.role != "system").map(m => `${m.role}: ${m.content}`).join('\n');
 
     setMsgChat(formattedMsg)
-    
   }
   const [msg, setMsg] = useState({ value: ''})
   const [msgChat, setMsgChat] = useState({})

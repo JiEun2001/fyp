@@ -14,6 +14,7 @@ import {
   Dashboard,
   CampusMap,
   ChooseLocation,
+  Admin,
   Translator
 } from './src/screen'
 import { 
@@ -41,6 +42,7 @@ export default function App() {
           <Stack.Screen name="CampusMap" component={CampusMap} />
           <Stack.Screen name="Translator" component={Translator} />
           <Stack.Screen name="ChooseLocation" component={ChooseLocation} />
+          <Stack.Screen name="Admin" component={Admin} />
           <Stack.Screen
             name="ResetPasswordScreen"
             component={ResetPasswordScreen}
