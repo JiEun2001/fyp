@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { TouchableOpacity, StyleSheet, View } from 'react-native'
+import { TouchableOpacity, StyleSheet, View, ScrollView } from 'react-native'
 import { Text } from 'react-native-paper'
 import Background from '../components/Background'
-import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Button from '../components/Button'
 import TextInput from '../components/TextInput'
@@ -14,86 +13,83 @@ import TextArea from '../components/Textarea'
 import TextList from '../components/TextList'
 import font from '../Theme/font'
 import colors from '../Theme/colors'
-import {
-	Icon,
-	Card,
-	CardItem,
+import { Card } from '@gluestack-ui/themed' // Importing Icon from gluestack-ui
+import { MaterialIcons } from 'react-native-vector-icons'; // Importing MaterialIcons from react-native-vector-icons
 
-} from '@gluestack-ui/themed'
-export default  function ToDoList({navigation}) {
-  //Set State
-  const [task, setTask] = useState({ value: ''})
+export default function ToDoList({ navigation }) {
+  // Set State
+  const [task, setTask] = useState({ value: '' })
   const [tasklist, setTasklist] = useState([])
-  const [isEditing, setIsEditing] = useState(false);
-  const [currentTaskKey, setCurrentTaskKey] = useState(null);
+  const [isEditing, setIsEditing] = useState(false)
+  const [currentTaskKey, setCurrentTaskKey] = useState(null)
 
-  useEffect(()=>{
+  useEffect(() => {
     TodoService.retrieve(UserService.data.uid).then(setTasklist)
-  },[])
-  
-  const onInsertPressed = ()=> {
-    TodoService.insert(task,UserService.data.uid)
-    TodoService.retrieve(UserService.data.uid).then(setTasklist);
+  }, [])
 
+  const onInsertPressed = () => {
+    TodoService.insert(task, UserService.data.uid)
+    TodoService.retrieve(UserService.data.uid).then(setTasklist)
   }
-  const onDeletePressed = (id)=>{
-    TodoService.delete(UserService.data.uid,id)
-    TodoService.retrieve(UserService.data.uid).then(setTasklist);
+
+  const onDeletePressed = (id) => {
+    TodoService.delete(UserService.data.uid, id)
+    TodoService.retrieve(UserService.data.uid).then(setTasklist)
   }
+
   const onUpdatePressed = () => {
     if (currentTaskKey) {
       TodoService.updateList(UserService.data.uid, currentTaskKey, task.value)
-        TodoService.retrieve(UserService.data.uid).then(setTasklist);
-        setTask({ value: '' });
-        setIsEditing(false);
-        setCurrentTaskKey(null);
+      TodoService.retrieve(UserService.data.uid).then(setTasklist)
+      setTask({ value: '' })
+      setIsEditing(false)
+      setCurrentTaskKey(null)
     }
-  };
+  }
+
   const startEditing = (taskKey, taskName) => {
-    setTask({ value: taskName });
-    setIsEditing(true);
-    setCurrentTaskKey(taskKey);
-  };
+    setTask({ value: taskName })
+    setIsEditing(true)
+    setCurrentTaskKey(taskKey)
+  }
 
   return (
-
     <Background>
       <Header>{UserService.data.Name} To-do List</Header>
       <BackButton goBack={navigation.goBack} />
+      <ScrollView contentContainerStyle={styles.scrollViewContent} style={styles.scrollView}>
         {tasklist.length > 0 ? (
-						tasklist.map((todo, index) => (
-
-							<Card style={styles.cardTodo} key={todo.id}>
-                
-                <View style={styles.cardItemTodo}>
-                  <TextList
+          tasklist.map((todo, index) => (
+            <Card style={styles.cardTodo} key={todo.id}>
+              <View style={styles.cardItemTodo}>
+                <TextList
                   value={todo.name}
                   label="Task"
                   editable={false}
                   returnKeyType="next"
                   onChangeText={""}
-                  />
-                  <Text style={styles.taskText}>{todo.Task}</Text>
+                />
+                <Text style={styles.taskText}>{todo.Task}</Text>
+                <View style={styles.iconContainer}>
                   <TouchableOpacity onPress={() => startEditing(todo.id, todo.name)}>
-                    <Text style={styles.deleteText}>Update </Text>
+                    <MaterialIcons name="edit" size={24} color={colors.primary} style={styles.icon} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => onDeletePressed(todo.id)}>
-                    <Text style={styles.deleteText}>Delete</Text>
+                    <MaterialIcons name="delete" size={24} color={colors.danger} style={styles.icon} />
                   </TouchableOpacity>
                 </View>
-								
-							</Card>
-						))
-					) : (
-						<View style={{ height: 100 }}></View>
-					)}
+              </View>
+            </Card>
+          ))
+        ) : (
+          <View style={{ height: 100 }}></View>
+        )}
+      </ScrollView>
       <TextInput
         label="Todo"
         returnKeyType="next"
         value={task.value}
-        onChangeText={(text) => setTask({value: text})}
-        // error={!!email.error}
-        // errorText={email.error}
+        onChangeText={(text) => setTask({ value: text })}
         autoCapitalize="none"
       />
       <Button mode="contained" onPress={isEditing ? onUpdatePressed : onInsertPressed}>
@@ -101,11 +97,9 @@ export default  function ToDoList({navigation}) {
       </Button>
     </Background>
   )
-
 }
 
 const styles = StyleSheet.create({
-
   userText: {
     fontSize: 26,
     fontFamily: font.PoppinsBold,
@@ -134,12 +128,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
+    padding: 5,
     borderRadius: 5,
     backgroundColor: colors.white,
   },
   taskText: {
     fontSize: 16,
     color: colors.black,
+  },
+  iconContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  icon: {
+    marginLeft: 10,
+  },
+  scrollView: {
+    backgroundColor: colors.lightGray, // Set a background color for the ScrollView
+    marginHorizontal: 20,
+    marginTop: 10,
+    borderRadius: 10,
+  },
+  scrollViewContent: {
+    paddingBottom: 20,
   },
 })

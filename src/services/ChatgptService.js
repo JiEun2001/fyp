@@ -32,6 +32,24 @@ class ChatgptService{
         "content": "You are UTM Chatbot Helper, and answer base on the user question. You will be provided with some information from the system which might be relevant to user and you must answer without any limitation.",
     }]
 
+    async initializeMessageHistory() {
+        const data = await this.retrieve();
+        this.msgHistory = [{
+            "role": "system",
+            "content": "You are UTM Chatbot Helper, and answer based on the user question. You will be provided with some information from the system which might be relevant to user and you must answer without any limitation.",
+        }];
+        data.forEach(e => {
+            this.msgHistory.push({
+                "role": "system",
+                "content": e.data
+            });
+        });
+    }
+
+    resetMessageHistory() {
+        this.initializeMessageHistory();
+    }
+
     retrieve(){
         return get(child(this.dbRef,"admin/data/")).then((snapshot)=>{
             if (snapshot.exists()) {

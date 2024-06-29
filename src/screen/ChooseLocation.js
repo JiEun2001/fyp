@@ -1,19 +1,15 @@
-import React, { useState} from 'react'
+import React, { useState,useEffect} from 'react'
 import Background from '../components/Background'
 import Logo from '../components/Logo'
 import Header from '../components/Header'
 import Paragraph from '../components/Paragraph'
 import Button from '../components/Button'
-import { FIREBASE_AUTH } from '../../FirebaseConfig'
-import AuthServices from '../services/AuthService'
-import UserService from '../services/UserService'
-import Tab from '../components/TabNavigation'
-import TabNavigation from '../components/TabNavigation'
-import TextInput from '../components/TextInput'
 import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplete'
 import AddressPickUp from '../components/AddressPickUp'
-import CstmBtn from '../components/CstmBtn'
+import { View, Text, StyleSheet } from 'react-native';
 import { useNavigation } from '@react-navigation/native'
+import * as Location from 'expo-location';
+import { Checkbox } from 'react-native-paper';
 
 export default function ChooseLocation(props) {
 
@@ -27,13 +23,34 @@ export default function ChooseLocation(props) {
 
   const {pickupCords, droplocationCords} = state
 
-  const onLogOutPressed = () => {
-    AuthServices.logOut();
-    navigation.reset({
-      index: 0,
-      routes: [{ name: 'StartScreen' }],
-    })
+  const [location, setLocation] = useState(null);
+  const [checked, setChecked] = useState(false);
+
+  const onCheckboxCheck= async () => {
+    setChecked(!checked);
+    if (!checked) {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== 'granted') {
+        console.log('Permission to access location was denied');
+        return;
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      setState({
+        ...state,
+        pickupCords: {
+          latitude: location.coords.latitude,
+          longitude: location.coords.longitude
+        }
+      });
+    } else {
+      setState({
+        ...state,
+        pickupCords: {}
+      });
+    }
   }
+
 
   const fetchAddressCords= (lat,lng) => {
     console.log("latitude=",lat)
@@ -51,9 +68,8 @@ export default function ChooseLocation(props) {
       longitude: lng
     }})
   }
-  console.log("props = ",props)
-  // console.log("Pickup cords =  ",pickupCords)
-  // console.log("Destin cords =  ",droplocationCords)
+
+  
 
   const onDone =() => {
     props.route.params.getCordinates({
@@ -64,32 +80,50 @@ export default function ChooseLocation(props) {
   }
   return (
     <Background>
-        {/* <ScrollView> */}
+        <View style={[styles.checkboxContainer,{ marginTop: 20 }]}>
+          <Checkbox
+            status={checked ? 'checked' : 'unchecked'}
+            onPress={() => {
+              onCheckboxCheck();
+            }}
+          />
+          <Text style={styles.checkboxLabel}>Use Current Location as Starting Point</Text>
+        </View>
+        {!checked && (
         <AddressPickUp
-        placeholderText="Enter First Destination"
-        fetchAddress={fetchAddressCords}
+          placeholderText="Enter First Destination"
+          fetchAddress={fetchAddressCords}
         />
+        )}
         <AddressPickUp
         placeholderText="Enter Second Destination"
         fetchAddress={fetchDestinationCords}
         />
-        <CstmBtn
-        mode="outlined"
-        onPress={()=>{
-          navigation.goBack
-        }}
-        >
-          done
-        </CstmBtn>
       {/* <Header>Welcome {UserService.data.Name}</Header> */}
       {/* </ScrollView> */}
       <Button
         mode="outlined"
         onPress={onDone}
       >
-        go back
+        Confirm
       </Button>
       {/* <TabNavigation/> */}
     </Background>
   )
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  checkboxLabel: {
+    marginLeft: 10,
+  },
+});

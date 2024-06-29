@@ -24,7 +24,7 @@ export default function TextList({ errorText, description, ...props }) {
 const styles = StyleSheet.create({
   container: {
     width: '70%',
-    marginVertical: 12,
+    marginVertical: 5,
   },
   input: {
     backgroundColor: theme.colors.surface,
@@ -32,11 +32,11 @@ const styles = StyleSheet.create({
   description: {
     fontSize: 13,
     color: theme.colors.secondary,
-    paddingTop: 8,
+    paddingTop: 4,
   },
   error: {
     fontSize: 13,
     color: theme.colors.error,
-    paddingTop: 8,
+    paddingTop: 4,
   },
 })
