@@ -33,11 +33,10 @@ export default function Translator({ navigation }) {
   const [msg, setMsg] = useState({ value: '' });
   const [msgChat, setMsgChat] = useState([]);
 
-  const onPressTranslate = async () => {
-    console.log("translate pressed")
-    const msgTranslate = await Chatgpt.chatbot(msg);
-    console.log("msgTranslate ===>", msgTranslate);
-    const formattedMsg = msgTranslate.filter(f => f.role !== "system").map(m => ({ role: m.role, content: m.content }));
+  const onPressRequest = async () => {
+    const msgResponse = await Chatgpt.chatbot(msg);
+    console.log("response ===>", msgResponse);
+    const formattedMsg = msgResponse.filter(f => f.role !== "system").map(m => ({ role: m.role, content: m.content }));
 
     setMsgChat(formattedMsg);
   }
@@ -62,9 +61,9 @@ export default function Translator({ navigation }) {
       />
       <Button
         mode="outlined"
-        onPress={onPressTranslate}
+        onPress={onPressRequest}
       >
-        Translate
+        Ask A Question
       </Button>
       {/* <TabNavigation /> */}
     </Background>

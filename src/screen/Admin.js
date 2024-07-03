@@ -1,3 +1,4 @@
+
 import React, { useEffect, useState } from 'react'
 import { TouchableOpacity, StyleSheet, View, ScrollView, } from 'react-native'
 import { Text } from 'react-native-paper'
@@ -20,34 +21,49 @@ import {
 	CardItem,
 
 } from '@gluestack-ui/themed'
+import { MaterialIcons } from 'react-native-vector-icons'; // Importing MaterialIcons from react-native-vector-icons
+
 
 export default function Admin({ navigation }) {
 
-  const[data,setData]=useState({})
+  const [data, setData] = useState({ value: '', error: '' });
   const[datalist,setDatalist]=useState({})
   const [isEditing, setIsEditing] = useState(false);
   const [currentTaskKey, setCurrentTaskKey] = useState(null);
   
   useEffect(()=>{
-    AdminService.retrieve().then(setDatalist)
+    retrieveData();
   },[])
 
-  const onInsertPressed = ()=> {
-    AdminService.insert(data)
-    AdminService.retrieve().then(setDatalist);
 
-  }
+  const retrieveData = async () => {
+    const data = await AdminService.retrieve();
+    setDatalist(data || []);
+  };
+
+  const onInsertPressed = async () => {
+    if (!data.value.trim()) {
+      setData({ ...data, error: "Data can't be empty." });
+      return;
+    }
+
+    await AdminService.insert(data);
+    await retrieveData();
+    setData({ value: '', error: '' });
+  };
+
+  
   const onDeletePressed = (id)=>{
     AdminService.delete(id)
     AdminService.retrieve().then(setDatalist);
   }
-  const onUpdatePressed = () => {
+  const onUpdatePressed = async () => {
     if (currentTaskKey) {
-        AdminService.updateList( currentTaskKey, data.value)
-        AdminService.retrieve().then(setDatalist);
-        setData({ value: '' });
-        setIsEditing(false);
-        setCurrentTaskKey(null);
+      await AdminService.updateList(currentTaskKey, data.value);
+      await retrieveData();
+      setData({ value: '', error: '' });
+      setIsEditing(false);
+      setCurrentTaskKey(null);
     }
   };
   const startEditing = (taskKey, taskName) => {
@@ -82,12 +98,14 @@ export default function Admin({ navigation }) {
                   onChangeText={""}
                   />
                   <Text style={styles.taskText}>{}</Text>
+                  <View style={styles.iconContainer}>
                   <TouchableOpacity onPress={() => startEditing(info.id,info.data)}>
-                    <Text style={styles.deleteText}>Update </Text>
+                    <MaterialIcons name="edit" size={24} color={colors.primary} style={styles.icon} />
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => onDeletePressed(info.id)}>
-                    <Text style={styles.deleteText}>Delete</Text>
+                    <MaterialIcons name="delete" size={24} color={colors.danger} style={styles.icon} />
                   </TouchableOpacity>
+                </View>
                 </View>
 								
 							</Card>
@@ -154,6 +172,13 @@ const styles = StyleSheet.create({
     taskText: {
       fontSize: 16,
       color: colors.black,
+    },
+    iconContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+    },
+    icon: {
+      marginLeft: 10,
     },
   })
   
